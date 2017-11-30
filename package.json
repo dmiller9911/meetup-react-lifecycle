@@ -1,0 +1,27 @@
+{
+  "name": "meetup-react-lifecycle",
+  "version": "0.1.0",
+  "private": true,
+  "author": "Doug Miller <doug@dougmiller.io> (https://www.dougmiller.io)",
+  "dependencies": {
+    "prop-types": "^15.6.0",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
+    "react-scripts": "1.0.17"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dmiller9911/react-bits.git"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  },
+  "devDependencies": {
+    "@types/prop-types": "^15.5.2",
+    "@types/react": "^16.0.25",
+    "@types/react-dom": "^16.0.3"
+  }
+}
