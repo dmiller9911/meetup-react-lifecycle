@@ -5,7 +5,7 @@ export function createLogger(label) {
   return (message) => {
     messages = [...messages, { label, message }];
     notify();
-  }
+  };
 }
 
 export function listen(callback) {

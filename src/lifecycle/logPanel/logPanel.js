@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { clear, listen } from '../logger';
 import { Header } from './header';
 import { LogList } from './logList';
+import { styles } from './logPanel.styles';
 
 export class LogPanel extends Component {
   state = {
@@ -27,11 +28,3 @@ export class LogPanel extends Component {
   }
 }
 
-export const styles = {
-  logPanel: {
-    flex: 3,
-    display: 'flex',
-    flexDirection: 'column',
-    backgroundColor: '#002b36',
-  },
-};

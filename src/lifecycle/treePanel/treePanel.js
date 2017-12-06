@@ -1,6 +1,7 @@
+import React, { Fragment } from 'react';
 import { bool, object } from 'prop-types';
-import React from 'react';
 import { TreeNode } from './treeNode';
+import { styles } from './treePanel.styles';
 
 const propTypes = {
   tree: object.isRequired,
@@ -11,19 +12,15 @@ export function TreePanel({ tree, isMounted }) {
   return (
     <div style={styles.childPanel}>
       {isMounted && (
-        <TreeNode node={tree} />
+        <Fragment>
+          <TreeNode node={tree} />
+          <div style={styles.tip}>
+            Click a node to trigger an error
+          </div>
+        </Fragment>
       )}
     </div>
   );
 }
-TreePanel.propTypes = propTypes;
 
-const styles = {
-  childPanel: {
-    flex: 2,
-    zIndex: 1,
-    boxShadow: '0 0 4px rgba(0,0,0,.14), 4px 0 8px rgba(0,0,0,.28)',
-    padding: 10,
-    backgroundColor: '#1d1f21',
-  },
-};
+TreePanel.propTypes = propTypes;

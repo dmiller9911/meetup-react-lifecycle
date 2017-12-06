@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
 import { array } from 'prop-types';
-
-const propTypes = {
-  logs: array.isRequired,
-};
+import { styles } from './logList.styles';
 
 export class LogList extends Component {
-  static propTypes = propTypes;
+  static propTypes = {
+    logs: array.isRequired,
+  };
 
   handleListRef = (node) => this.listElement = node;
 
@@ -30,27 +29,3 @@ export class LogList extends Component {
     );
   }
 }
-
-const styles = {
-  logList: {
-    flex: 1,
-    overflowY: 'auto',
-    padding: '0 10px 10px',
-  },
-  logEntry: {
-    display: 'block',
-    padding: 2,
-    fontSize: 16,
-  },
-  logNumber: {
-    width: 25,
-    display: 'inline-block',
-    color: '#93a1a1',
-  },
-  label: {
-    color: '#859900',
-  },
-  message: {
-    color: '#fdf6e3',
-  },
-};

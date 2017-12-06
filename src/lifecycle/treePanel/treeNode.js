@@ -1,21 +1,27 @@
 import React, { Component, Fragment } from 'react';
-import { array, shape, string } from 'prop-types';
+import { array, bool, shape, string } from 'prop-types';
 import { createLogger } from '../logger';
+import { styles } from './treeNode.styles';
 
 const propTypes = {
   node: shape({
     label: string.isRequired,
     children: array,
+    didCatchError: bool,
   }),
 };
 
 export class TreeNode extends Component {
   static propTypes = propTypes;
 
-  constructor(props) {
+  constructor(props, context) {
     super(props);
     this.log = createLogger(this.props.node.label);
     this.log('constructor');
+
+    this.state = {
+      showError: false,
+    };
   }
 
   componentWillMount() {
@@ -32,7 +38,7 @@ export class TreeNode extends Component {
 
   shouldComponentUpdate() {
     this.log('shouldComponentUpdate');
-    return true;
+    return this.props.node.label !== 'DoesNotUpdate';
   }
 
   componentWillUpdate() {
@@ -47,21 +53,41 @@ export class TreeNode extends Component {
     this.log('componentWillUnmount');
   }
 
+  handleClick = (e) => {
+    e.stopPropagation();
+    this.setState({ showError: true });
+  }
+
   render() {
     this.log('render');
-    const { label, children } = this.props.node;
+    if(this.state.showError) {
+      throw new Error(this.props.node.label);
+    }
+
+    const { label, children, didCatchError } = this.props.node;
     const hasChildren = !!children && children.length;
+
     return (
       <code style={styles.child}>
-        <div style={styles.tag}>
-          {'<'}{label}{hasChildren ? '>' : ' />'}
+        <div style={styles.tag} onClick={this.handleClick}>
+          <Tag
+            name={label}
+            closing={hasChildren}
+            error={didCatchError}
+          />
         </div>
         {hasChildren && (
           <Fragment>
             <div style={styles.children}>
               {children.map((c, i) => <TreeNode key={i} node={c} />)}
             </div>
-            <div style={styles.tag}>{'<'}{label} {'/>'}</div>
+            <div style={styles.tag}>
+              <Tag
+                closing
+                name={label}
+                error={didCatchError}
+              />
+            </div>
           </Fragment>
         )}
       </code>
@@ -69,15 +95,13 @@ export class TreeNode extends Component {
   }
 }
 
-const styles = {
-  child: {
-    fontSize: 18,
-    cursor: 'pointer',
-  },
-  tag: {
-    color: '#6c9ef8',
-  },
-  children: {
-    paddingLeft: 25,
-  },
-};
+function Tag({ name, closing = false, error = false }) {
+  return (
+    <Fragment>
+      <span>{ `<${name}${closing ? '/>' : '>'}` }</span>
+      {error && (
+        <span style={styles.error}>Errored</span>
+      )}
+    </Fragment>
+  );
+}

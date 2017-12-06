@@ -1,14 +1,16 @@
 import React, { Component } from 'react';
+import { clear, createLogger } from './logger';
 import { ActionHeader } from './actionHeader';
 import { LogPanel } from './logPanel';
 import { TreePanel } from './treePanel';
-import { createLogger } from './logger';
+import { styles } from './lifecycle.styles';
 
 export class Lifecycle extends Component {
   log = createLogger('App');
   state = {
     tree: getDefaultTree(),
     isTreeMounted: false,
+    hasError: false,
   };
 
   handleMount = () => {
@@ -20,7 +22,31 @@ export class Lifecycle extends Component {
   }
 
   handleUnmount = () => {
-    this.setState(() => ({ isTreeMounted: false }));
+    this.setState(() => ({
+      isTreeMounted: false,
+      tree: getDefaultTree(),
+    }));
+  }
+
+  componentDidCatch(e, i) {
+    this.log(`componentDidCatch({ message: ${JSON.stringify(e.message)} })`);
+    this.setState(({ tree }) => {
+      const updateTree = (node) => {
+        if (node.label === e.message) {
+          return { ...node, didCatchError: true };
+        }
+        return { ...node,
+          children: node.children && node.children.map(n => updateTree(n)),
+        };
+      };
+      return {
+        tree: updateTree(tree),
+      };
+    });
+  }
+
+  componentWillUnmount() {
+    clear();
   }
 
   render() {
@@ -58,19 +84,12 @@ function getDefaultTree() {
       },
       { label: 'Child2' },
       { label: 'Child3' },
+      {
+        label: 'DoesNotUpdate',
+        children: [
+          { label: 'DoesNotUpdateNested' },
+        ],
+      },
     ],
   };
 }
-
-const styles = {
-  lifecycle: {
-    display: 'flex',
-    height: '100vh',
-    flexDirection: 'column',
-  },
-  content: {
-    flex: 1,
-    display: 'flex',
-    flexDirection: 'row',
-  },
-};

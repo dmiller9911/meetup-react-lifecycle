@@ -3,7 +3,7 @@
   "rules": {
     "quotes": ["error", "single"],
     "comma-dangle": ["error", "always-multiline"],
-    "sort-imports": "error",
+    "sort-imports": "warn",
     "semi": ["error", "always"]
   }
 }
